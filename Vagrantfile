@@ -2,7 +2,7 @@
 # Name: Automating and Configuring Jenkins
 # Author: Alex Kloster
 #
-# Description: Used to build various virtual machines using packer.
+# Description: 
 
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
