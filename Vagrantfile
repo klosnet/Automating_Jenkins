@@ -10,9 +10,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 $script = <<ENDSCRIPT
-# Install the the EPEL repository.
-  sudo yum --assumeyes --enablerepo=extras install epel-release;
-
+# Update & upgrade & mackecache with yum
   sudo yum --assumeyes update
   sudo yum --assumeyes upgrade
   sudo yum --assumeyes makecache fast
@@ -20,19 +18,11 @@ $script = <<ENDSCRIPT
 # Packages needed beyond a minimal install to build and run Jenkins.
   sudo yum --assumeyes install java-1.8.0-openjdk wget;
 
-# Install Jenkins repo
-  sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+# Download Jenkins RPM from Jenkins.io website
+ wget https://pkg.jenkins.io/redhat-stable/jenkins-2.164.2-1.1.noarch.rpm
 
-# Import Jenkins Key
-  sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-
-# Install Jenkins using repo
-  sudo yum --assumeyes install jenkins
-# wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
-# sudo java -jar jenkins.war --httpPort=8000 &
-
-# Copy of default Jenkins configuration
- #sudo cp /etc/sysconfig/jenkins /etc/sysconfig/jenkins.bak
+ # Install rpm using yum
+ sudo yum --assumeyes install jenkins-2.164.2-1.1.noarch.rpm
 
 # Add arguments to Jenkins to run on port 8000
   sudo printf "JENKINS_ARGS=--httpPort=8000" >> /etc/sysconfig/jenkins
@@ -51,9 +41,8 @@ $script = <<ENDSCRIPT
 ENDSCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  #config.vm.box = "puppetlabs/centos-7.0-64-puppet"
-  config.vm.box = "generic/centos7"
-config.vm.network "forwarded_port", guest: 8000, host: 8001
-config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.box = "puppetlabs/centos-7.0-64-puppet"
+  config.vm.network "forwarded_port", guest: 8000, host: 8002
+  config.vm.network :private_network, ip: "192.168.33.10"
   config.vm.provision "shell", inline: $script
 end
