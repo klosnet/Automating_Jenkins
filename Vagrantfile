@@ -38,11 +38,13 @@ $script = <<ENDSCRIPT
   firewall-cmd --zone=public --add-service=http --permanent
   firewall-cmd --reload
 
+#  Display Administrator password needed to loginto the web portal.
+  grep -A 5 password /var/log/jenkins/jenkins.log
 ENDSCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "puppetlabs/centos-7.0-64-puppet"
-  config.vm.network "forwarded_port", guest: 8000, host: 8002
-  config.vm.network :private_network, ip: "192.168.33.10"
+config.vm.network "forwarded_port", guest: 8000, host: 8002
+config.vm.network :private_network, ip: "192.168.33.10"
   config.vm.provision "shell", inline: $script
 end
