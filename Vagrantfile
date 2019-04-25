@@ -37,9 +37,6 @@ $script = <<ENDSCRIPT
   firewall-cmd --zone=public --add-port=8000/tcp --permanent
   firewall-cmd --zone=public --add-service=http --permanent
   firewall-cmd --reload
-
-#  Display Administrator password needed to loginto the web portal.
-  grep -A 5 password /var/log/jenkins/jenkins.log
 ENDSCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
