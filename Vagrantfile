@@ -2,7 +2,7 @@
 # Name: Automating and Configuring Jenkins
 # Author: Alex Kloster
 #
-# Description: 
+# Description: Used to build Jenkins using a generic centos7 OS using vagrant and bash.
 
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
@@ -42,11 +42,18 @@ $script = <<ENDSCRIPT
 
 # Enable Jenkins to start on boot
   sudo systemctl enable jenkins.service
+
+# Add port 8000 to firewalld, reload firewalld
+  firewall-cmd --zone=public --add-port=8000/tcp --permanent
+  firewall-cmd --zone=public --add-service=http --permanent
+  firewall-cmd --reload
+
 ENDSCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #config.vm.box = "puppetlabs/centos-7.0-64-puppet"
   config.vm.box = "generic/centos7"
-#  config.vm.network "forwarded_port", guest: 8000, host: 8000
+config.vm.network "forwarded_port", guest: 8000, host: 8001
+config.vm.network :private_network, ip: "192.168.33.10"
   config.vm.provision "shell", inline: $script
 end
